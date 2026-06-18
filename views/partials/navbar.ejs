@@ -13,7 +13,10 @@
     <div class="site-header__actions">
       <% if (isLoggedIn) { %>
         <a href="/portal/dashboard" class="btn btn--primary btn--sm">My Portal</a>
+      <% } else if (isStaffLoggedIn) { %>
+        <a href="/admin/dashboard" class="btn btn--primary btn--sm">Staff Dashboard</a>
       <% } else { %>
+        <a href="/admin/login" class="btn btn--ghost btn--sm">Staff Login</a>
         <a href="/login" class="btn btn--ghost btn--sm">Log In</a>
         <a href="/register" class="btn btn--primary btn--sm">Register</a>
       <% } %>

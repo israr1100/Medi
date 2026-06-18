@@ -5,11 +5,8 @@
 // reminder.
 
 const cron = require('node-cron');
-const path = require('path');
-const { DatabaseSync } = require('node:sqlite');
+const db = require('../config/db');
 const { sendAppointmentReminder } = require('./email');
-
-const dbPath = path.join(__dirname, '../database/medprime.db');
 
 function tomorrowISO() {
   const d = new Date();
@@ -18,7 +15,6 @@ function tomorrowISO() {
 }
 
 async function runReminderSweep() {
-  const db = new DatabaseSync(dbPath);
   try {
     const tomorrow = tomorrowISO();
 
@@ -48,8 +44,6 @@ async function runReminderSweep() {
     }
   } catch (err) {
     console.error('Reminder sweep failed:', err.message);
-  } finally {
-    db.close();
   }
 }
 

@@ -2,11 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const path = require('path');
-const { DatabaseSync } = require('node:sqlite');
+const db = require('../config/db');
 const { sendAppointmentStatusUpdate, sendTestResultReady } = require('../services/email');
 
-const dbPath = path.join(__dirname, '../database/medprime.db');
 
 // Middleware to secure admin pages
 function requireAdmin(req, res, next) {
@@ -25,7 +23,6 @@ router.get('/admin/login', (req, res) => {
 // POST: Process Technician Login Form
 router.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
-  const db = new DatabaseSync(dbPath);
 
   try {
     const stmt = db.prepare('SELECT * FROM staff WHERE email = ?');
@@ -42,15 +39,11 @@ router.post('/admin/login', (req, res) => {
   } catch (err) {
     console.error(err);
     res.render('admin/login', { error: 'An unexpected database error occurred.' });
-  } finally {
-    db.close();
   }
 });
 
 // GET: Display Admin Panel Dashboard
 router.get('/admin/dashboard', requireAdmin, (req, res) => {
-  const db = new DatabaseSync(dbPath);
-
   try {
     // 1. Fetch appointments joined with patient names & department names
     const appointmentsQuery = db.prepare(`
@@ -80,8 +73,6 @@ router.get('/admin/dashboard', requireAdmin, (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error fetching admin logs');
-  } finally {
-    db.close();
   }
 });
 
@@ -89,7 +80,6 @@ router.get('/admin/dashboard', requireAdmin, (req, res) => {
 router.post('/admin/appointments/:id/status', requireAdmin, (req, res) => {
   const { status } = req.body;
   const { id } = req.params;
-  const db = new DatabaseSync(dbPath);
 
   try {
     db.prepare('UPDATE appointments SET status = ? WHERE id = ?').run(status, id);
@@ -110,8 +100,9 @@ router.post('/admin/appointments/:id/status', requireAdmin, (req, res) => {
     }
 
     res.redirect('/admin/dashboard');
-  } finally {
-    db.close();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating appointment status');
   }
 });
 
@@ -119,7 +110,6 @@ router.post('/admin/appointments/:id/status', requireAdmin, (req, res) => {
 router.post('/admin/tests/:id/results', requireAdmin, (req, res) => {
   const { result_summary, status } = req.body;
   const { id } = req.params;
-  const db = new DatabaseSync(dbPath);
 
   try {
     db.prepare('UPDATE test_requests SET result_summary = ?, status = ? WHERE id = ?').run(result_summary, status, id);
@@ -143,8 +133,9 @@ router.post('/admin/tests/:id/results', requireAdmin, (req, res) => {
     }
 
     res.redirect('/admin/dashboard');
-  } finally {
-    db.close();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error entering test results');
   }
 });
 

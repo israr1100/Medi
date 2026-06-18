@@ -14,15 +14,8 @@ const portalRoutes = require('./routes/portal');
 const adminRoutes = require('./routes/admin');
 const { startReminderScheduler } = require('./services/reminderScheduler');
 
-// Friendly check: remind the developer to run the DB setup script if the
-// database file doesn't exist yet, instead of crashing with a cryptic
-// SQLite error.
-const dbPath = path.join(__dirname, 'database', 'medprime.db');
-if (!fs.existsSync(dbPath)) {
-  console.error('\nDatabase not found.');
-  console.error('Run "npm run init-db" first, then start the server again.\n');
-  process.exit(1);
-}
+// Database is loaded and initialized automatically from config/db.js
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;

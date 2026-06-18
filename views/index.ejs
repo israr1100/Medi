@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <section class="hero">
+    <div class="container hero__inner">
+      <div>
+        <span class="eyebrow">Trusted diagnostics since 2010</span>
+        <h1>Clear answers about your health, <span class="accent">without the wait.</span></h1>
+        <p class="hero__lead">Medprime Diagnostic Centre brings together expert doctors and an accredited lab under one roof — book a consultation or a test online and track everything from one patient portal.</p>
+        <div class="hero__ctas">
+          <% if (isLoggedIn) { %>
+            <a href="/portal/book-appointment" class="btn btn--primary">Book an Appointment</a>
+            <a href="/portal/request-test" class="btn btn--outline">Request a Test</a>
+          <% } else { %>
+            <a href="/register" class="btn btn--primary">Book an Appointment</a>
+            <a href="/services" class="btn btn--outline">View Services</a>
+          <% } %>
+        </div>
+        <div class="hero__stats">
+          <div><span class="hero__stat-num">15+</span><span class="hero__stat-label">Years of service</span></div>
+          <div><span class="hero__stat-num">6</span><span class="hero__stat-label">Specialist departments</span></div>
+          <div><span class="hero__stat-num">98%</span><span class="hero__stat-label">Reports on time</span></div>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <div class="hero__pulse-bg">
+          <svg viewBox="0 0 600 90" preserveAspectRatio="none">
+            <path d="M0 45 H220 L245 45 L268 12 L296 78 L320 45 L345 45 L365 30 L380 45 H600" />
+          </svg>
+        </div>
+        <div class="float-card float-card--appt">
+          <span class="float-card__tag float-card__tag--confirmed">Confirmed</span>
+          <p class="float-card__title">Cardiology Consultation</p>
+          <p class="float-card__meta">Mon, 22 June · 10:30 AM</p>
+        </div>
+        <div class="float-card float-card--result">
+          <span class="float-card__tag float-card__tag--ready">Report Ready</span>
+          <p class="float-card__title">Lipid Profile</p>
+          <p class="float-card__meta">Viewable in Patient Portal</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/pulse-divider') %>
+
+  <section class="section">
+    <div class="container">
+      <div class="section__head">
+        <span class="section__kicker">Departments</span>
+        <h2>Specialist care, organized by department</h2>
+        <p>Choose the right department when booking so the right specialist sees your case first.</p>
+      </div>
+      <div class="grid grid--3">
+        <% departments.forEach(d => { %>
+          <div class="dept-card">
+            <div class="dept-card__icon"><%= d.name.charAt(0) %></div>
+            <h3><%= d.name %></h3>
+            <p><%= d.description %></p>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <div class="section__head">
+        <span class="section__kicker">How it works</span>
+        <h2>From booking to results, in three steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step__num">01</span>
+          <h3>Create your patient account</h3>
+          <p>Register once with your basic details. Your records stay private to your login.</p>
+        </div>
+        <div class="step">
+          <span class="step__num">02</span>
+          <h3>Book an appointment or test</h3>
+          <p>Pick a department or lab test, choose a convenient date and time, and submit.</p>
+        </div>
+        <div class="step">
+          <span class="step__num">03</span>
+          <h3>Visit us and check your portal</h3>
+          <p>Come in for your visit or sample collection, then track status and results online.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Ready to take the next step in your care?</h2>
+        <p>Booking takes less than two minutes.</p>
+        <a href="<%= isLoggedIn ? '/portal/book-appointment' : '/register' %>" class="btn btn--primary">Book an Appointment</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

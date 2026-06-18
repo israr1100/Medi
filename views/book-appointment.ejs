@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <div class="portal">
+    <%- include('partials/portal-sidebar', { active: 'book-appointment' }) %>
+
+    <main class="portal__main">
+      <div class="portal__header">
+        <div>
+          <h1>Book an Appointment</h1>
+          <p>Choose a department, then pick a date and time that works for you.</p>
+        </div>
+      </div>
+
+      <% if (error) { %>
+        <div class="alert alert--error" style="max-width:560px;"><%= error %></div>
+      <% } %>
+
+      <form action="/portal/book-appointment" method="POST" class="page-form">
+        <div class="field">
+          <label for="department_id">Department</label>
+          <select id="department_id" name="department_id" required>
+            <option value="" disabled selected>Choose a department</option>
+            <% departments.forEach(d => { %>
+              <option value="<%= d.id %>" <%= formData.department_id == d.id ? 'selected' : '' %>><%= d.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="preferred_date">Preferred date</label>
+            <input type="date" id="preferred_date" name="preferred_date" value="<%= formData.preferred_date || '' %>" required />
+          </div>
+          <div class="field">
+            <label for="preferred_time">Preferred time</label>
+            <input type="time" id="preferred_time" name="preferred_time" value="<%= formData.preferred_time || '' %>" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="reason">Reason for visit (optional)</label>
+          <textarea id="reason" name="reason" rows="3" placeholder="Briefly describe your symptoms or reason for the visit"><%= formData.reason || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary">Confirm Booking</button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>

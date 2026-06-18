@@ -1,0 +1,18 @@
+<aside class="portal__sidebar">
+  <a href="/" class="brand">
+    <span class="brand__mark">M+</span>
+    <span class="brand__name">Medprime</span>
+  </a>
+  <nav class="portal__nav">
+    <a href="/portal/dashboard" class="<%= active === 'dashboard' ? 'is-active' : '' %>">Dashboard</a>
+    <a href="/portal/book-appointment" class="<%= active === 'book-appointment' ? 'is-active' : '' %>">Book Appointment</a>
+    <a href="/portal/request-test" class="<%= active === 'request-test' ? 'is-active' : '' %>">Request a Test</a>
+    <a href="/portal/profile" class="<%= active === 'profile' ? 'is-active' : '' %>">My Profile</a>
+  </nav>
+  <div class="portal__sidebar-foot">
+    <p style="font-size:0.85rem; color: var(--color-gray-500); margin-bottom:10px;">Signed in as<br/><strong style="color: var(--color-ink);"><%= patientName %></strong></p>
+    <form action="/logout" method="POST">
+      <button type="submit" class="btn btn--ghost btn--sm btn--block">Log Out</button>
+    </form>
+  </div>
+</aside>

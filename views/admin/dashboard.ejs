@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <style>
+    body { background-color: #fdfdfd; font-family: sans-serif; margin: 0; }
+    .header { background: #333; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { margin: 0; font-size: 20px; color: #f2690f; }
+    .header a { color: #fff; text-decoration: none; font-size: 14px; background: #555; padding: 6px 12px; border-radius: 4px; }
+    .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .section-title { color: #333; border-bottom: 2px solid #f2690f; padding-bottom: 8px; margin-top: 40px; }
+    table { width: 100%; border-collapse: collapse; background: white; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+    th, td { padding: 12px; border: 1px solid #eee; text-align: left; font-size: 14px; }
+    th { background: #f8f8f8; color: #555; }
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; }
+    .badge-pending { background: #ffebeb; color: #c92a2a; }
+    .badge-confirmed { background: #e3faf2; color: #0ca678; }
+    .badge-completed { background: #edf2ff; color: #364fc7; }
+    .badge-cancelled { background: #f1f3f5; color: #868e96; }
+    .update-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .save-btn { background: #f2690f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+    textarea { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid #ccc; border-radius: 4px; resize: vertical; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Medprime Admin Control Panel</h1>
+    <div>
+      <span style="margin-right: 15px;">Technician: <strong><%= staffName %></strong></span>
+      <a href="/admin/logout">Sign Out</a>
+    </div>
+  </div>
+
+  <div class="main-container">
+    
+    <h2 class="section-title">Doctor Appointment Bookings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Department</th>
+          <th>Preferred Date & Time</th>
+          <th>Status</th>
+          <th>Change Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% appointments.forEach(app => { %>
+          <tr>
+            <td><strong><%= app.patient_name %></strong></td>
+            <td><%= app.department_name %></td>
+            <td><%= app.preferred_date %> at <%= app.preferred_time %></td>
+            <td><span class="badge badge-<%= app.status %>"><%= app.status %></span></td>
+            <td>
+              <form action="/admin/appointments/<%= app.id %>/status" method="POST" style="display: flex; gap: 5px; align-items: center;">
+                <select name="status" style="padding: 4px; border-radius: 4px; border: 1px solid #ccc;">
+                  <option value="pending" <%= app.status === 'pending' ? 'selected' : '' %>>pending</option>
+                  <option value="confirmed" <%= app.status === 'confirmed' ? 'selected' : '' %>>confirmed</option>
+                  <option value="completed" <%= app.status === 'completed' ? 'selected' : '' %>>completed</option>
+                  <option value="cancelled" <%= app.status === 'cancelled' ? 'selected' : '' %>>cancelled</option>
+                </select>
+                <button type="submit" class="update-btn">Update</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+        <% if (appointments.length === 0) { %>
+          <tr><td colspan="5" style="text-align: center; color: #999;">No doctor appointments found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Lab Test Profiles & Entry Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 20%;">Patient Name</th>
+          <th style="width: 20%;">Test Requested</th>
+          <th style="width: 15%;">Date</th>
+          <th style="width: 20%;">Status & Current Findings</th>
+          <th style="width: 25%;">Submit/Edit Lab Reports</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% testRequests.forEach(test => { %>
+          <tr>
+            <td><strong><%= test.patient_name %></strong></td>
+            <td><%= test.test_name %></td>
+            <td><%= test.preferred_date %></td>
+            <td>
+              <span class="badge badge-<%= test.status %>" style="margin-bottom: 8px;"><%= test.status %></span>
+              <div style="font-size: 12px; color: #555; background: #f9f9f9; padding: 6px; border-radius: 4px;">
+                <strong>Report Summary:</strong><br>
+                <%= test.result_summary ? test.result_summary : 'No findings documented.' %>
+              </div>
+            </td>
+            <td>
+              <form action="/admin/tests/<%= test.id %>/results" method="POST" style="display: flex; flex-direction: column; gap: 6px;">
+                <textarea name="result_summary" rows="2" placeholder="Ex: Hemoglobin: 14.5 g/dL (Normal)" required><%= test.result_summary || '' %></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <label style="font-size: 11px; color:#555;">Status:</label>
+                    <select name="status" style="padding: 3px; font-size:12px;">
+                      <option value="pending" <%= test.status === 'pending' ? 'selected' : '' %>>pending</option>
+                      <option value="completed" <%= test.status === 'completed' ? 'selected' : '' %>>completed</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="save-btn">Save Report</button>
+                </div>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+        <% if (testRequests.length === 0) { %>
+          <tr><td colspan="5" style="text-align: center; color: #999;">No lab test entries found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <div class="portal">
+    <%- include('partials/portal-sidebar', { active: 'request-test' }) %>
+
+    <main class="portal__main">
+      <div class="portal__header">
+        <div>
+          <h1>Request a Lab Test</h1>
+          <p>Pick a test and a preferred date for sample collection.</p>
+        </div>
+      </div>
+
+      <% if (error) { %>
+        <div class="alert alert--error" style="max-width:560px;"><%= error %></div>
+      <% } %>
+
+      <form action="/portal/request-test" method="POST" class="page-form">
+        <div class="field">
+          <label for="test_id">Lab test</label>
+          <select id="test_id" name="test_id" required>
+            <option value="" disabled selected>Choose a test</option>
+            <% tests.forEach(t => { %>
+              <option value="<%= t.id %>" <%= formData.test_id == t.id ? 'selected' : '' %>><%= t.name %> &mdash; &#8377;<%= t.price.toFixed(0) %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="preferred_date">Preferred date</label>
+          <input type="date" id="preferred_date" name="preferred_date" value="<%= formData.preferred_date || '' %>" required />
+        </div>
+        <div class="field">
+          <label for="notes">Notes for the lab (optional)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="E.g. fasting status, current medication"><%= formData.notes || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary">Submit Request</button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>

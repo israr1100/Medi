@@ -1,0 +1,27 @@
+{
+  "name": "medprime-diagnostic-centre",
+  "version": "1.0.0",
+  "description": "Medprime Diagnostic Centre - patient appointment, test request, and patient portal web application",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node --no-warnings server.js",
+    "dev": "nodemon --no-warnings server.js",
+    "init-db": "node --no-warnings database/init-db.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.1.0",
+    "node-cron": "^4.4.1",
+    "resend": "^6.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="auth-shell">
+    <div class="auth-shell__art">
+      <h2>Your health records, organized in one place.</h2>
+      <p>Create a free patient account to book appointments, request lab tests, and view your results as soon as they're ready.</p>
+    </div>
+    <div class="auth-shell__form">
+      <div class="form-card">
+        <h1>Create your account</h1>
+        <p class="form-card__sub">It only takes a minute.</p>
+
+        <% if (error) { %>
+          <div class="alert alert--error"><%= error %></div>
+        <% } %>
+
+        <form action="/register" method="POST">
+          <div class="field">
+            <label for="full_name">Full name</label>
+            <input type="text" id="full_name" name="full_name" value="<%= formData.full_name || '' %>" required />
+          </div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" value="<%= formData.email || '' %>" required />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" minlength="6" required />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" name="phone" value="<%= formData.phone || '' %>" required />
+            </div>
+            <div class="field">
+              <label for="date_of_birth">Date of birth</label>
+              <input type="date" id="date_of_birth" name="date_of_birth" value="<%= formData.date_of_birth || '' %>" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+              <option value="">Prefer not to say</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="2"><%= formData.address || '' %></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block">Create Account</button>
+        </form>
+
+        <p class="form-card__foot">Already have an account? <a href="/login">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

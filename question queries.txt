@@ -1,0 +1,5 @@
+Q: How should technicians log in to the admin page?
+A: Separate named staff accounts (each technician has their own login)
+
+Q: What should the admin page let technicians do?
+A: View all bookings + update status + enter test results

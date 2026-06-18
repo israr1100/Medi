@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <div class="portal">
+    <%- include('partials/portal-sidebar', { active: 'dashboard' }) %>
+
+    <main class="portal__main">
+      <div class="portal__header">
+        <div>
+          <h1>Welcome back, <%= patient.full_name.split(' ')[0] %></h1>
+          <p>Here's what's happening with your care.</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <a href="/portal/book-appointment" class="quick-action">
+          <div class="quick-action__icon">&#128197;</div>
+          <div>
+            <p class="quick-action__title">Book an Appointment</p>
+            <p class="quick-action__sub">See a specialist at a time that suits you</p>
+          </div>
+        </a>
+        <a href="/portal/request-test" class="quick-action">
+          <div class="quick-action__icon">&#129514;</div>
+          <div>
+            <p class="quick-action__title">Request a Lab Test</p>
+            <p class="quick-action__sub">Choose a test and preferred date</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="portal-section">
+        <div class="portal-section__head">
+          <h2>Your Appointments</h2>
+          <a href="/portal/book-appointment" class="btn btn--outline btn--sm">+ New</a>
+        </div>
+
+        <% if (appointments.length === 0) { %>
+          <div class="empty-state">
+            <p>No appointments yet. <a href="/portal/book-appointment">Book your first one</a>.</p>
+          </div>
+        <% } else { %>
+          <% appointments.forEach(a => { %>
+            <div class="record-card">
+              <div>
+                <p class="record-card__title"><%= a.department_name %></p>
+                <p class="record-card__meta"><%= a.preferred_date %> at <%= a.preferred_time %><% if (a.reason) { %> &middot; <%= a.reason %><% } %></p>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span class="status-badge status-badge--<%= a.status %>"><%= a.status %></span>
+                <% if (a.status === 'pending') { %>
+                  <form action="/portal/appointments/<%= a.id %>/cancel" method="POST">
+                    <button type="submit" class="btn btn--danger btn--sm">Cancel</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+
+      <div class="portal-section">
+        <div class="portal-section__head">
+          <h2>Your Test Requests</h2>
+          <a href="/portal/request-test" class="btn btn--outline btn--sm">+ New</a>
+        </div>
+
+        <% if (testRequests.length === 0) { %>
+          <div class="empty-state">
+            <p>No test requests yet. <a href="/portal/request-test">Request one now</a>.</p>
+          </div>
+        <% } else { %>
+          <% testRequests.forEach(t => { %>
+            <div class="record-card" style="display: flex; flex-direction: column; align-items: stretch; gap: 12px;">
+              
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <p class="record-card__title" style="margin: 0;"><%= t.test_name %></p>
+                  <p class="record-card__meta" style="margin: 4px 0 0 0;">Preferred date: <%= t.preferred_date %> &middot; &#8377;<%= t.price.toFixed(0) %></p>
+                </div>
+                <span class="status-badge status-badge--<%= t.status %>"><%= t.status %></span>
+              </div>
+
+              <% if (t.status === 'completed' && t.result_summary) { %>
+                <div style="margin-top: 5px; padding: 12px; background-color: #f4f7f6; border-left: 4px solid #0ca678; border-radius: 4px;">
+                  <strong style="color: #2b2b2b; font-size: 13px; display: block; margin-bottom: 4px;">🔬 Official Lab Diagnostic Report Findings:</strong>
+                  <p style="margin: 0; color: #4a4a4a; font-size: 13px; font-family: monospace; white-space: pre-line; line-height: 1.4;"><%= t.result_summary %></p>
+                </div>
+              <% } else if (t.status === 'completed' && !t.result_summary) { %>
+                <div style="margin-top: 5px; padding: 10px; background-color: #fff9db; border-left: 4px solid #f59f00; border-radius: 4px;">
+                  <p style="margin: 0; color: #666; font-size: 12px;">Report has been cleared, but descriptive metric strings have not yet been logged by the lab officer.</p>
+                </div>
+              <% } %>
+
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

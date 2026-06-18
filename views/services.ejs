@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <section class="hero" style="padding-bottom: 50px;">
+    <div class="container">
+      <span class="eyebrow">Services</span>
+      <h1 style="max-width:640px;">Departments and lab tests, all bookable online.</h1>
+      <p class="hero__lead">Browse what we offer below. When you're ready, create a patient account to book an appointment or request a test — both take less than two minutes.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section__head">
+        <span class="section__kicker">Departments</span>
+        <h2>Find the right specialist</h2>
+      </div>
+      <div class="grid grid--3">
+        <% departments.forEach(d => { %>
+          <div class="dept-card">
+            <div class="dept-card__icon"><%= d.name.charAt(0) %></div>
+            <h3><%= d.name %></h3>
+            <p><%= d.description %></p>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/pulse-divider') %>
+
+  <section class="section section--tint">
+    <div class="container">
+      <div class="section__head">
+        <span class="section__kicker">Lab tests</span>
+        <h2>Common tests and pricing</h2>
+        <p>Prices shown are standard rates in INR. Final billing is confirmed at the centre.</p>
+      </div>
+      <div class="card" style="padding:0; overflow:hidden;">
+        <table class="test-table">
+          <thead>
+            <tr><th>Test</th><th>Category</th><th>Turnaround</th><th>Price</th></tr>
+          </thead>
+          <tbody>
+            <% tests.forEach(t => { %>
+              <tr>
+                <td><%= t.name %></td>
+                <td><span class="pill"><%= t.category %></span></td>
+                <td><%= t.turnaround_time %></td>
+                <td>&#8377;<%= t.price.toFixed(0) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Need one of these tests?</h2>
+        <p>Create a free patient account and request it online in under two minutes.</p>
+        <a href="<%= isLoggedIn ? '/portal/request-test' : '/register' %>" class="btn btn--primary">Request a Test</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

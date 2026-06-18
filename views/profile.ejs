@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <div class="portal">
+    <%- include('partials/portal-sidebar', { active: 'profile' }) %>
+
+    <main class="portal__main">
+      <div class="portal__header">
+        <div>
+          <h1>My Profile</h1>
+          <p>Keep your contact details up to date.</p>
+        </div>
+      </div>
+
+      <% if (success) { %>
+        <div class="alert alert--success" style="max-width:560px;">Profile updated successfully.</div>
+      <% } %>
+
+      <form action="/portal/profile" method="POST" class="page-form">
+        <div class="field">
+          <label for="full_name">Full name</label>
+          <input type="text" id="full_name" name="full_name" value="<%= patient.full_name %>" required />
+        </div>
+        <div class="field">
+          <label>Email address</label>
+          <input type="email" value="<%= patient.email %>" disabled />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" name="phone" value="<%= patient.phone || '' %>" required />
+          </div>
+          <div class="field">
+            <label>Date of birth</label>
+            <input type="date" value="<%= patient.date_of_birth %>" disabled />
+          </div>
+        </div>
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="" <%= !patient.gender ? 'selected' : '' %>>Prefer not to say</option>
+            <option value="Female" <%= patient.gender === 'Female' ? 'selected' : '' %>>Female</option>
+            <option value="Male" <%= patient.gender === 'Male' ? 'selected' : '' %>>Male</option>
+            <option value="Other" <%= patient.gender === 'Other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" rows="2"><%= patient.address || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary">Save Changes</button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
